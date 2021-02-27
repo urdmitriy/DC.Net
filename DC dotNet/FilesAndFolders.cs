@@ -9,14 +9,16 @@ namespace DC_dotNet
     {
         public List<string> ListDirectory;
         public List<Files> ListFiles;
-        //static public string currentPath = "";
-        int level = 0;
+        
+        int level = 0; //переменная для отслеживания глубины рекурсии
         public FilesAndFolders()
         {
+            //создание списков папок и файлов
             ListDirectory = new List<string>();
             ListFiles = new List<Files>();
         }
 
+        //получение списка всех папок
         public void GetListDir(string path)
         {
             level++;
@@ -53,6 +55,7 @@ namespace DC_dotNet
 
         }
 
+        //постоение списка папок, выводимых на указанный номер страницы
         internal void GetListDirForPage(int page)
         {
             int countLinesDisplay = WorkSpace.windowHeigh - 8;
@@ -65,6 +68,8 @@ namespace DC_dotNet
                     if (ListDirectory.Count>(page * countLinesDisplay + i))
                     {
                         string dirName = ListDirectory[page * countLinesDisplay + i];
+
+                        //если имя папки не умещается в ширину столбца, обрезаем и ставим метку ~~
                         if (dirName.Length > WorkSpace.windowWidth / 3 - 3)
                         {
                             dirName = dirName.Substring(0, WorkSpace.windowWidth / 3 - 4);
@@ -75,6 +80,7 @@ namespace DC_dotNet
                 }
             }
             int countDir = ListDirectory.Count;
+            //перестраиваем список с учетом номера страницы
             ListDirectory.Clear();
             foreach (var item in pageDirList)
             {
@@ -83,7 +89,7 @@ namespace DC_dotNet
             }
             ListDirectory.Add($"    Страница: {page + 1} из {((countDir - 1) / (WorkSpace.windowHeigh - 8)) + 1}");
         }
-
+        //постоение списка файлов с учетом страничности
         public void GetListFile(string path, int page=0)
         {
             try
@@ -99,6 +105,8 @@ namespace DC_dotNet
                         string fileName = Path.GetFileName(fileList[i]);
                         string fileDate = File.GetLastWriteTime(fileList[i]).ToString();
                         double fileSize = new FileInfo(fileList[i]).Length;
+
+                        //пересчитываем размер файла в юзер-френдли
                         if (fileSize > 1073741824)
                         {
                             fileSize = Math.Round(fileSize / 1073741824, 3);
@@ -123,14 +131,15 @@ namespace DC_dotNet
                             fileSizeStr += " B";
                         }
 
+                        //обрезаем длинные имена файлов
                         if (fileName.Length > (WorkSpace.windowWidth - (WorkSpace.windowWidth / 3) -34))
                         {
                             fileName = fileName.Substring(0, (WorkSpace.windowWidth - (WorkSpace.windowWidth / 3) - 36));
                             fileName += "~~";
                         }
+                        //строим список
                         ListFiles.Add(new Files(fileName, fileDate, fileSizeStr));
                     }
-                        
                 }
                 ListFiles.Add(new Files($"    Страница: {page + 1} из {((fileList.Length - 1)/(WorkSpace.windowHeigh - 8))+1}"));
             }

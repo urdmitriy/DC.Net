@@ -8,6 +8,7 @@ namespace DC_dotNet
         public static int windowWidth { get; set; }
         public static int windowHeigh { get; set; }
 
+        //прорисовка горизонтальных линий
         static void HorizontalLine(int x1, int x2, int y, char symbol)
         {
             for (int i = x1; i <= x2; i++)
@@ -17,6 +18,7 @@ namespace DC_dotNet
             }
         }
 
+        //прорисовка вертикальныйх линий
         public static void VerticalLine(int x, int y1, int y2, char symbol)
         {
             for (int i = y1; i < y2; i++)
@@ -26,12 +28,14 @@ namespace DC_dotNet
             }
         }
 
+        //метод для нанесения надписей
         static void LabelName(int x, int y, string name)
         {
             Console.SetCursorPosition(x, y);
             Console.Write(name);
         }
 
+        //метод распечатки ошибок
         public static void Error (int x, string message)
         {
             Console.SetCursorPosition(x, windowHeigh-3);
@@ -41,6 +45,7 @@ namespace DC_dotNet
             Console.SetCursorPosition(2, windowHeigh - 1);
         }
 
+        //метод распечатки файлов и папок
         static public void PrintDirAndFiles(int pageDir=0, int pageFile=0)
         {
             if (pageDir > 0) pageDir--; //для юзер-френдли)
@@ -83,6 +88,8 @@ namespace DC_dotNet
             }
             Console.SetCursorPosition(2, windowHeigh - 1);
         }
+        
+        //прорисовка рамки
         static public void DrawFrame()
         {
             Console.Clear();

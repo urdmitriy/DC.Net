@@ -2,7 +2,8 @@
 
 namespace DC_dotNet
 {
-    public class Files
+    //класс для списка файлов
+    public class Files 
     {
         public string name { get; set; }
         public string date { get; set; }

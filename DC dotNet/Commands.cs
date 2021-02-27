@@ -37,7 +37,7 @@ namespace DC_dotNet
                 bool stop = false;
                 {    //прохогоняет коммандную строку до разделителя (пробел) и помещает результат в массив параметров
                     while (indexChar < command.Length && stop == false)
-                    {    //если путь указан в ""
+                    {    //если путь/параметр указан в ""
                         if (command[indexChar] == '"')
                         {
                             indexChar++;
@@ -84,8 +84,10 @@ namespace DC_dotNet
             {
                 bool searched = false;
 
+                //перебор параметров
                 for (int i = 0; i < param.Length; i++)
                 {
+                    //поиск запрашиваемого параметра
                     for (int j = 0; j < paramSearch.Length; j++)
                     {
                         string paramString = param[i];
@@ -103,6 +105,7 @@ namespace DC_dotNet
                         else
                             break;
                     }
+                    //если требуемый параметр был найден, возвращаем его значение
                     if (searched == true)
                     {
                         return param[i + 1];
@@ -121,28 +124,32 @@ namespace DC_dotNet
                     string path = param[0];
                     try
                     {
+                        //обработка .. для переход в родительский каталог
                         if (path == "..")
                         {
                             string parentDir="";
 
+                            //если родительский каталог существует
                             if (Directory.GetParent(Environment.CurrentDirectory)!=null)
                             {
                                 parentDir = Directory.GetParent(Environment.CurrentDirectory).ToString();
+                                //смена текущего каталога на родительский     
+                                Environment.CurrentDirectory = parentDir;
                             }
-                                
-                            Environment.CurrentDirectory = parentDir;
                         }
                         else
                         {
+                            //смена текущего каталога
                             string newPath = Path.Combine(Environment.CurrentDirectory, path);
                             Environment.CurrentDirectory = newPath;
                         }
                             
-
+                        //если указаны номера страниц листинга, передаем их
                         WorkSpace.PrintDirAndFiles(Convert.ToInt32(searchParametr("pd")), Convert.ToInt32(searchParametr("pf")));
                     }
                     catch (Exception)
                     {
+                        //если что-то пошло не так
                         WorkSpace.DrawFrame();
                         WorkSpace.PrintDirAndFiles();
                         WorkSpace.Error(2, "Не удалось сменить директорию");
@@ -276,6 +283,7 @@ namespace DC_dotNet
                         try
                         {
                             File.Copy(sourceFile, Path.Combine(Environment.CurrentDirectory, Path.GetFileName(newNameFile)), true);
+                            //если файл создался, то удаляем старый
                             if (File.Exists(Path.Combine(Environment.CurrentDirectory, newNameFile)))
                                 File.Delete(sourceFile);
                             WorkSpace.DrawFrame();
@@ -324,16 +332,20 @@ namespace DC_dotNet
                     WorkSpace.Error(2, $"Не удалось найти файл {fileToDel}");
                 }
             }
+
             //help
             void helpPrint()
             {
-                int str = 3;
+                int str = 3; //начальная строка
+
+                //процедура добавления строки на экран
                 void addString(string strToAdd)
                 {
                     Console.SetCursorPosition(1, str);
                     Console.Write(strToAdd);
                     str++;
                 }
+
                 WorkSpace.DrawFrame();
                 WorkSpace.VerticalLine(WorkSpace.windowWidth / 3, 3, WorkSpace.windowHeigh - 4, ' ');
                 Console.ForegroundColor = ConsoleColor.Yellow;
