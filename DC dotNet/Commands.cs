@@ -245,29 +245,40 @@ namespace DC_dotNet
             //процедура копирования файла
             void cpFile()
             {
-                string sourceFile = Path.GetFullPath(param[0]);
-                string destPath = Path.GetFullPath(Path.Combine(param[1]));
-                if (File.Exists(sourceFile))
+                
+                if (!string.IsNullOrEmpty(param[0]) && !string.IsNullOrEmpty(param[1]))
                 {
-                    try
+                    string sourceFile = Path.GetFullPath(param[0]);
+                    string destPath = Path.GetFullPath(Path.Combine(param[1]));
+                    if (File.Exists(sourceFile))
                     {
-                        File.Copy(sourceFile, Path.Combine(destPath,Path.GetFileName(sourceFile)), true);
-                        WorkSpace.DrawFrame();
-                        WorkSpace.PrintDirAndFiles();
+                        try
+                        {
+                            File.Copy(sourceFile, Path.Combine(destPath, Path.GetFileName(sourceFile)), true);
+                            WorkSpace.DrawFrame();
+                            WorkSpace.PrintDirAndFiles();
+                        }
+                        catch (Exception)
+                        {
+                            WorkSpace.DrawFrame();
+                            WorkSpace.PrintDirAndFiles();
+                            WorkSpace.Error(3, $"Не удалось скопировать файл {sourceFile}");
+                        }
                     }
-                    catch (Exception)
+                    else
                     {
                         WorkSpace.DrawFrame();
                         WorkSpace.PrintDirAndFiles();
-                        WorkSpace.Error(3, $"Не удалось скопировать файл {sourceFile}");
+                        WorkSpace.Error(3, $"Файл {sourceFile} не найден");
                     }
                 }
                 else
                 {
                     WorkSpace.DrawFrame();
                     WorkSpace.PrintDirAndFiles();
-                    WorkSpace.Error(3, $"Файл {sourceFile} не найден");
+                    WorkSpace.Error(2, "Неверный параметр команды");
                 }
+                
             }
 
             //переименование файла
